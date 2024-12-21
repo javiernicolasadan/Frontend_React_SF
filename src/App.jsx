@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css"; // Archivo de estilos externo
 
 const App = () => {
@@ -57,8 +57,24 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Datos enviados:", formData);
-    // Aquí puedes enviar los datos al backend
+    try {
+      const response = await fetch("http://localhost:3000/sf/commuting", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log("Respuesta del servidor:", data);
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+    }
   };
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
     <div className="container">
