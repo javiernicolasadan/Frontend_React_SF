@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css"; // Archivo de estilos externo
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     commutingTypes: [],
@@ -33,7 +34,9 @@ const App = () => {
       updatedCommutingTypes.push(value);
     } else {
       // Quitar el tipo de commuting deseleccionado
-      updatedCommutingTypes = updatedCommutingTypes.filter((type) => type !== value);
+      updatedCommutingTypes = updatedCommutingTypes.filter(
+        (type) => type !== value
+      );
       // Remover detalles asociados a este tipo
       const updatedDetails = { ...formData.details };
       delete updatedDetails[value];
@@ -56,19 +59,46 @@ const App = () => {
   // Envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Datos enviados:", formData);
+    setIsLoading(true);
+    const { name, company, commutingTypes, details } = formData;
+    // Generar y enviar un registro para cada tipo de commuting
     try {
-      const response = await fetch("http://localhost:3000/sf/commuting", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      console.log("Respuesta del servidor:", data);
+      const responses = await Promise.all(
+        commutingTypes.map(async (type) => {
+          const payload = {
+            name,
+            company,
+            type, // Tipo de commuting
+            startDate: details[type]?.startDate || "",
+            endDate: details[type]?.endDate || "",
+            distance: details[type]?.distance || 0,
+            cost: details[type]?.cost || 0, // Solo aplica a algunos tipos
+          };
+
+          // Enviar al backend
+          const response = await fetch("http://localhost:3000/sf/commuting", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error al enviar datos para ${type}`);
+          }
+
+          return response.json();
+        })
+      );
+
+      console.log("Respuestas del servidor:", responses);
+      alert("Datos enviados con éxito");
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
+      alert("Error al enviar los datos");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,7 +112,9 @@ const App = () => {
       <form onSubmit={handleSubmit}>
         {/* Nombre */}
         <div className="form-group">
-          <label className="label" htmlFor="name">Nombre</label>
+          <label className="label" htmlFor="name">
+            Nombre
+          </label>
           <input
             className="input"
             type="text"
@@ -96,7 +128,9 @@ const App = () => {
 
         {/* Empresa */}
         <div className="form-group">
-          <label className="label" htmlFor="company">Empresa</label>
+          <label className="label" htmlFor="company">
+            Empresa
+          </label>
           <input
             className="input"
             type="text"
@@ -131,7 +165,9 @@ const App = () => {
           <div key={type} className="form-group">
             <h4 className="sub-heading">Detalles para {type}</h4>
             <div>
-              <label className="label" htmlFor={`${type}-startDate`}>Fecha Inicial</label>
+              <label className="label" htmlFor={`${type}-startDate`}>
+                Fecha Inicial
+              </label>
               <input
                 className="input"
                 type="date"
@@ -143,7 +179,9 @@ const App = () => {
               />
             </div>
             <div>
-              <label className="label" htmlFor={`${type}-endDate`}>Fecha Final</label>
+              <label className="label" htmlFor={`${type}-endDate`}>
+                Fecha Final
+              </label>
               <input
                 className="input"
                 type="date"
@@ -155,7 +193,9 @@ const App = () => {
               />
             </div>
             <div>
-              <label className="label" htmlFor={`${type}-distance`}>Distancia (en km)</label>
+              <label className="label" htmlFor={`${type}-distance`}>
+                Distancia (en km)
+              </label>
               <input
                 className="input"
                 type="number"
@@ -168,9 +208,13 @@ const App = () => {
               />
             </div>
             {/* Campo de coste del viaje (solo para Metro/Tren cercanías, Tren media distancia, y Taxi) */}
-            {["Metro/Tren cercanías", "Tren media distancia", "Taxi"].includes(type) && (
+            {["Metro/Tren cercanías", "Tren media distancia", "Taxi"].includes(
+              type
+            ) && (
               <div>
-                <label className="label" htmlFor={`${type}-cost`}>Coste del viaje (en €)</label>
+                <label className="label" htmlFor={`${type}-cost`}>
+                  Coste del viaje (en €)
+                </label>
                 <input
                   className="input"
                   type="number"
@@ -187,7 +231,9 @@ const App = () => {
         ))}
 
         {/* Botón de Enviar */}
-        <button className="button" type="submit">Enviar</button>
+        <button className="button" type="submit" disabled={isLoading}>
+          {isLoading ? "Enviando..." : "Enviar"}
+        </button>
       </form>
     </div>
   );
