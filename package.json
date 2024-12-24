@@ -25,5 +25,7 @@
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.13.0",
     "vite": "^6.0.3"
-  }
+  },
+  "homepage": "https://github.com/javiernicolasadan/Frontend_React_SF"
+
 }
