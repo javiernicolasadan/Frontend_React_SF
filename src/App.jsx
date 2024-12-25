@@ -114,12 +114,12 @@ const App = () => {
 
   return (
     <div className="container">
-      <h1 className="heading">Formulario de Commuting</h1>
+      <h1 className="heading">Formulario de forma de desplazamiento al trabajo.</h1>
       <form onSubmit={handleSubmit}>
         {/* Name */}
         <div className="form-group">
           <label className="label" htmlFor="name">
-            Nombre
+            Nombre del trabajador
           </label>
           <input
             className="input"
@@ -150,7 +150,7 @@ const App = () => {
 
         {/* Commuting Types */}
         <div className="form-group">
-          <label className="label">Tipos de Commuting</label>
+          <label className="label">Tipos de Desplazamientos</label>
           {commutingOptions.map((option) => (
             <div key={option}>
               <label>
