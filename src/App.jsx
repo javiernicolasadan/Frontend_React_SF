@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css"; 
+import REACT_APP_API_URL from './assets/config.js';
 
 const App = () => {
+  
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -17,7 +19,7 @@ const App = () => {
     "Caminando-Bicicleta",
     "Taxi",
   ];
-
+  //console.log(process.env.API_URL)
   // Handle changes in text fields
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,9 +77,10 @@ const App = () => {
             distance: details[type]?.distance || 0,
             cost: details[type]?.cost || 0, // Only applies to certain types
           };
-
+          // console.log("URL:", `${REACT_APP_API_URL}/commuting`);
+          // console.log("Payload:", payload);
           // Send to backend
-          const response = await fetch("http://localhost:3000/sf/commuting", {
+          const response = await fetch(`${REACT_APP_API_URL}/sf/commuting`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
