@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import "./App.css"; 
-import API_URL from './assets/config.js';
+import "./App.css";
+import API_URL from "./assets/config.js";
 
 const App = () => {
-  console.log(import.meta.env);
+  //console.log(import.meta.env);
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -78,13 +78,10 @@ const App = () => {
             distance: details[type]?.distance || 0,
             cost: details[type]?.cost || 0, // Only applies to certain types
           };
-          // console.log("URL:", `${REACT_APP_API_URL}/commuting`);
           // console.log("Payload:", payload);
+          //console.log(`${API_URL}/sf/commuting`);
+
           // Send to backend
-          console.log(`${API_URL}/sf/commuting`);
-          console.log(payload);
-
-
           const response = await fetch(`${API_URL}/sf/commuting`, {
             method: "POST",
             headers: {
