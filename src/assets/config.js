@@ -1,5 +1,4 @@
-/* eslint-env node */
+// eslint-disable-next-line no-undef
+const  VITE_API_URL= process.env.VITE_API_URL || "http://localhost:3000/sf/commuting";
 
-const  REACT_APP_API_URL= process.env.REACT_APP_API_URL || "http://localhost:3000/sf/commuting";
-
-export default REACT_APP_API_URL;
+export default VITE_API_URL;
