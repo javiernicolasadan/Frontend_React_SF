@@ -3,7 +3,8 @@ import "./App.css";
 import VITE_API_URL from './assets/config.js';
 
 const App = () => {
-  
+  console.log(import.meta.env);
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -80,7 +81,7 @@ const App = () => {
           // console.log("URL:", `${REACT_APP_API_URL}/commuting`);
           // console.log("Payload:", payload);
           // Send to backend
-          const response = await fetch(`${VITE_API_URL}`, {
+          const response = await fetch(`${VITE_API_URL}/sf/commuting`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
