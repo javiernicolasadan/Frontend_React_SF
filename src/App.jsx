@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import "./App.css"; // Archivo de estilos externo
+import "./App.css"; 
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     commutingTypes: [],
-    details: {}, // Guarda fechas, distancia y coste para cada tipo
+    details: {}, // Save dates, distance, and cost for each type
     company: "",
   });
 
@@ -18,26 +18,27 @@ const App = () => {
     "Taxi",
   ];
 
-  // Manejo de cambios en los campos de texto
+  // Handle changes in text fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Manejo de selección de tipos de commuting
+  // Handle selection of commuting types
   const handleCommutingChange = (e) => {
     const { value, checked } = e.target;
     let updatedCommutingTypes = [...formData.commutingTypes];
 
     if (checked) {
-      // Agregar el tipo de commuting seleccionado
+      // Add the selected commuting type
       updatedCommutingTypes.push(value);
     } else {
-      // Quitar el tipo de commuting deseleccionado
+      // Remove the deselected commuting type
+
       updatedCommutingTypes = updatedCommutingTypes.filter(
         (type) => type !== value
       );
-      // Remover detalles asociados a este tipo
+      // Remove details associated with this type
       const updatedDetails = { ...formData.details };
       delete updatedDetails[value];
       setFormData({ ...formData, details: updatedDetails });
@@ -46,7 +47,7 @@ const App = () => {
     setFormData({ ...formData, commutingTypes: updatedCommutingTypes });
   };
 
-  // Manejo de cambios en fechas, distancia y coste
+  // Handle changes in dates, distance, and cost
   const handleDetailChange = (e, commutingType) => {
     const { name, value } = e.target;
     const updatedDetails = {
@@ -56,26 +57,26 @@ const App = () => {
     setFormData({ ...formData, details: updatedDetails });
   };
 
-  // Envío del formulario
+  // Form subbmission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     const { name, company, commutingTypes, details } = formData;
-    // Generar y enviar un registro para cada tipo de commuting
+    // Generate and sen a record for each commuting type
     try {
       const responses = await Promise.all(
         commutingTypes.map(async (type) => {
           const payload = {
             name,
             company,
-            type, // Tipo de commuting
+            type, // Commuting type
             startDate: details[type]?.startDate || "",
             endDate: details[type]?.endDate || "",
             distance: details[type]?.distance || 0,
-            cost: details[type]?.cost || 0, // Solo aplica a algunos tipos
+            cost: details[type]?.cost || 0, // Only applies to certain types
           };
 
-          // Enviar al backend
+          // Send to backend
           const response = await fetch("http://localhost:3000/sf/commuting", {
             method: "POST",
             headers: {
@@ -110,7 +111,7 @@ const App = () => {
     <div className="container">
       <h1 className="heading">Formulario de Commuting</h1>
       <form onSubmit={handleSubmit}>
-        {/* Nombre */}
+        {/* Name */}
         <div className="form-group">
           <label className="label" htmlFor="name">
             Nombre
@@ -126,7 +127,7 @@ const App = () => {
           />
         </div>
 
-        {/* Empresa */}
+        {/* Company */}
         <div className="form-group">
           <label className="label" htmlFor="company">
             Empresa
@@ -142,7 +143,7 @@ const App = () => {
           />
         </div>
 
-        {/* Tipos de Commuting */}
+        {/* Commuting Types */}
         <div className="form-group">
           <label className="label">Tipos de Commuting</label>
           {commutingOptions.map((option) => (
@@ -160,7 +161,7 @@ const App = () => {
           ))}
         </div>
 
-        {/* Detalles por Tipo de Commuting */}
+        {/* Details by Commuting Type */}
         {formData.commutingTypes.map((type) => (
           <div key={type} className="form-group">
             <h4 className="sub-heading">Detalles para {type}</h4>
@@ -207,7 +208,7 @@ const App = () => {
                 required
               />
             </div>
-            {/* Campo de coste del viaje (solo para Metro/Tren cercanías, Tren media distancia, y Taxi) */}
+            {/* Travel cost field (only for Metro/Suburban Train, Medium-Distance Train, and Taxi) */}
             {["Metro/Tren cercanías", "Tren media distancia", "Taxi"].includes(
               type
             ) && (
@@ -230,7 +231,7 @@ const App = () => {
           </div>
         ))}
 
-        {/* Botón de Enviar */}
+        {/* Submit Button */}
         <button className="button" type="submit" disabled={isLoading}>
           {isLoading ? "Enviando..." : "Enviar"}
         </button>
