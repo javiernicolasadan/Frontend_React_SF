@@ -93,10 +93,10 @@ const App = () => {
         })
       );
 
-      console.log("Respuestas del servidor:", responses);
+      console.log("Server responses:", responses);
       alert("Datos enviados con éxito");
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
+      console.error("Error with form submission:", error);
       alert("Error al enviar los datos");
     } finally {
       setIsLoading(false);
