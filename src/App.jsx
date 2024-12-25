@@ -81,6 +81,10 @@ const App = () => {
           // console.log("URL:", `${REACT_APP_API_URL}/commuting`);
           // console.log("Payload:", payload);
           // Send to backend
+          console.log(`${API_URL}/sf/commuting`);
+          console.log(payload);
+
+
           const response = await fetch(`${API_URL}/sf/commuting`, {
             method: "POST",
             headers: {
